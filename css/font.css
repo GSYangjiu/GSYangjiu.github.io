@@ -1,0 +1,10 @@
+@font-face {
+  font-family: 'LXGW WenKai';
+  font-display: swap;
+  src: url('..//fonts/LXGWWenKai-Light.ttf') format("truetype");
+  src: url('..//fonts/LXGWWenKai-Bold.ttf') format("truetype");
+  src: url('..//fonts/LXGWWenKai-Regular.ttf') format("truetype");
+  src: url('..//fonts/LXGWWenKaiMono-Bold.ttf') format("truetype");
+  src: url('..//fonts/LXGWWenKaiMono-Light.ttf') format("truetype");
+  src: url('..//fonts/LXGWWenKaiMono-Regular.ttf') format("truetype");
+}
