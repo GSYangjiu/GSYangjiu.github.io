@@ -8,7 +8,7 @@
       <link href="/posts/f3b67776.html"/>
       <url>/posts/f3b67776.html</url>
       
-        <content type="html"><![CDATA[<h2 id="nginx镜像拉取"><a href="#nginx镜像拉取" class="headerlink" title="nginx镜像拉取"></a>nginx镜像拉取</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull nginx</span><br></pre></td></tr></table></figure><h2 id="创建挂载目录"><a href="#创建挂载目录" class="headerlink" title="创建挂载目录"></a>创建挂载目录</h2><p>根目录 <em>&#x2F;home&#x2F;docker&#x2F;nginx&#x2F;</em></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ./conf</span><br><span class="line"><span class="built_in">mkdir</span> ./html</span><br><span class="line"><span class="built_in">mkdir</span> ./logs</span><br></pre></td></tr></table></figure><h2 id="启动测试容器"><a href="#启动测试容器" class="headerlink" title="启动测试容器"></a>启动测试容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##启动测试容器</span></span><br><span class="line">docker run --name <span class="built_in">test</span> -d nginx</span><br><span class="line"></span><br><span class="line"><span class="comment">##复制配置文件</span></span><br><span class="line">docker <span class="built_in">cp</span> <span class="built_in">test</span>:/etc/nginx/nginx.conf /home/docker/nginx/conf/</span><br><span class="line">docker <span class="built_in">cp</span> <span class="built_in">test</span>:/etc/nginx/conf.d/default.conf  /home/docker/nginx/conf.d</span><br></pre></td></tr></table></figure><p>nginx镜像中的配置文件路径默认是<em>etc&#x2F;nginx&#x2F;nginx.conf</em>, 也可以进入镜像<em>nginx -t</em>确认下。</p><p><img src="http://r76en9bw6.hd-bkt.clouddn.com/img/iShot2022-02-14.png" alt="nginx -t"></p><p>访问下服务器ip，nginx启动默认监听80端口，确认没问题就<em>docker rm</em>掉刚刚的test容器，开始正式部署。</p><h2 id="正式部署"><a href="#正式部署" class="headerlink" title="正式部署"></a>正式部署</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run --name nginx --privileged -it -p 80:80 \</span><br><span class="line">-v /home/docker/nginx/conf/nginx.conf:/etc/nginx/nginx.conf:ro \</span><br><span class="line">-v /home/docker/nginx/conf/conf.d:/etc/nginx/conf.d:ro \</span><br><span class="line">-v /home/docker/nginx/html:/usr/share/nginx/html:rw  \</span><br><span class="line">-v /home/docker/nginx/logs:/var/log/nginx \</span><br><span class="line">-d nginx</span><br></pre></td></tr></table></figure><p>启动后<em>docker ps -a</em>查看下容器状态。</p><h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><h3 id="ngxin访问403"><a href="#ngxin访问403" class="headerlink" title="ngxin访问403"></a>ngxin访问403</h3><p>有几种可能：</p><p>1.容器html挂载错误</p><p><em>docker exec -it 容器id &#x2F;bin&#x2F;bash</em>进入容器内部确认下挂载路径下有没有对应html文件。</p><p>2.nginx启动用户错误</p><p>docker启动ngxin用的是root用户，而nginx默认配置文件中用的是nginx用户。</p><p><img src="http://r76en9bw6.hd-bkt.clouddn.com/img/iShot2022-02-14.21.07.43.jpg" alt="ngixn-config"></p><p>3.其他</p><p>其他问题使用命令<em>docker logs 容器id</em>，看下日志具体是什么错误，具体解决。</p>]]></content>
+        <content type="html"><![CDATA[<h2 id="nginx镜像拉取"><a href="#nginx镜像拉取" class="headerlink" title="nginx镜像拉取"></a>nginx镜像拉取</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">docker pull nginx</span><br></pre></td></tr></table></figure><h2 id="创建挂载目录"><a href="#创建挂载目录" class="headerlink" title="创建挂载目录"></a>创建挂载目录</h2><p>根目录 <em>&#x2F;home&#x2F;docker&#x2F;nginx&#x2F;</em></p><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> ./conf</span><br><span class="line"><span class="built_in">mkdir</span> ./html</span><br><span class="line"><span class="built_in">mkdir</span> ./logs</span><br></pre></td></tr></table></figure><h2 id="启动测试容器"><a href="#启动测试容器" class="headerlink" title="启动测试容器"></a>启动测试容器</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">##启动测试容器</span></span><br><span class="line">docker run --name <span class="built_in">test</span> -d nginx</span><br><span class="line"></span><br><span class="line"><span class="comment">##复制配置文件</span></span><br><span class="line">docker <span class="built_in">cp</span> <span class="built_in">test</span>:/etc/nginx/nginx.conf /home/docker/nginx/conf/</span><br><span class="line">docker <span class="built_in">cp</span> <span class="built_in">test</span>:/etc/nginx/conf.d/default.conf  /home/docker/nginx/conf.d</span><br></pre></td></tr></table></figure><p>nginx镜像中的配置文件路径默认是<em>etc&#x2F;nginx&#x2F;nginx.conf</em>, 也可以进入镜像<em>nginx -t</em>确认下。</p><p><img src="http://r76en9bw6.hd-bkt.clouddn.com/img/iShot2022-02-14.png" alt="nginx -t"></p><p>访问下服务器ip，nginx启动默认监听80端口，确认没问题就<em>docker rm</em>掉刚刚的test容器，开始正式部署。</p><h2 id="正式部署"><a href="#正式部署" class="headerlink" title="正式部署"></a>正式部署</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">docker run --name nginx --privileged -it -p 80:80 \</span><br><span class="line">-v /home/docker/nginx/conf/nginx.conf:/etc/nginx/nginx.conf:ro \</span><br><span class="line">-v /home/docker/nginx/conf/conf.d:/etc/nginx/conf.d:ro \</span><br><span class="line">-v /home/docker/nginx/html:/usr/share/nginx/html:rw  \</span><br><span class="line">-v /home/docker/nginx/logs:/var/log/nginx \</span><br><span class="line">-d nginx</span><br></pre></td></tr></table></figure><p>启动后<em>docker ps -a</em>查看下容器状态。</p><h2 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h2><h3 id="ngxin访问403"><a href="#ngxin访问403" class="headerlink" title="ngxin访问403"></a>ngxin访问403</h3><p>有几种可能：</p><p>1.网站资源文件挂载失败，ngxin配置文件写错</p><p><em>docker exec -it 容器id &#x2F;bin&#x2F;bash</em>进入容器内部确认下挂载路径下有没有对应html文件。</p><p>查看下nginx配置文件（nginx.conf和default.conf）确认下路径是否拼写错误</p><p>2.nginx启动用户和工作用户不一致</p><p>docker启动ngxin用的是root用户，而nginx默认配置文件中用的是nginx用户。</p><p>将配置文件中的<del>user nginx</del> 修改成<em>user root</em>就OK了</p><p><img src="http://r76en9bw6.hd-bkt.clouddn.com/img/iShot2022-02-14.21.07.43.jpg" alt="ngixn-config"></p><p>3.其他</p><p>其他问题使用命令<em>docker logs 容器id</em>，看下日志具体是什么错误，具体解决。</p>]]></content>
       
       
       <categories>
@@ -259,33 +259,6 @@
     
     
     <entry>
-      <title>和有些人生活在同一片天空下，感觉空气都变得浑浊</title>
-      <link href="/posts/95c1395b.html"/>
-      <url>/posts/95c1395b.html</url>
-      
-        <content type="html"><![CDATA[<span id="more"></span>]]></content>
-      
-      
-      <categories>
-          
-          <category> post </category>
-          
-      </categories>
-      
-      
-        <tags>
-            
-            <tag> 武汉 </tag>
-            
-            <tag> 生活 </tag>
-            
-        </tags>
-      
-    </entry>
-    
-    
-    
-    <entry>
       <title>搭建Nexus Maven私服</title>
       <link href="/posts/a6aa1f9d.html"/>
       <url>/posts/a6aa1f9d.html</url>
@@ -420,9 +393,9 @@
       
         <tags>
             
-            <tag> 生活 </tag>
-            
             <tag> 深圳 </tag>
+            
+            <tag> 生活 </tag>
             
             <tag> Blog </tag>
             
@@ -623,9 +596,9 @@
       
         <tags>
             
-            <tag> 生活 </tag>
-            
             <tag> 深圳 </tag>
+            
+            <tag> 生活 </tag>
             
         </tags>
       
@@ -650,9 +623,9 @@
       
         <tags>
             
-            <tag> 生活 </tag>
-            
             <tag> 深圳 </tag>
+            
+            <tag> 生活 </tag>
             
         </tags>
       
